@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>COCONUT AI - Disease Scanner</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="background-overlay"></div>
+
+    <header class="navbar">
+
+        <div class="logo">
+            🌴 COCONUT AI
+        </div>
+
+        <div class="nav-right">
+
+            <button id="backHomeButton" onclick="window.location.href='index.html'">
+                HOME
+            </button>
+
+        </div>
+
+    </header>
+
+    <main class="scanner-page">
+
+        <section class="scanner-heading">
+
+            <h1>🌴 Coconut Disease Scanner</h1>
+
+            <p>
+                Use your camera or upload a coconut tree image
+                to begin the scanning process.
+            </p>
+
+        </section>
+
+        <section class="scanner-container">
+
+            <!-- LIVE CAMERA -->
+
+            <div class="scanner-card">
+
+                <h2>📷 Live Camera</h2>
+
+                <video id="cameraPreview" autoplay playsinline></video>
+
+                <canvas id="captureCanvas" hidden></canvas>
+
+                <div class="scanner-buttons">
+
+                    <button id="startCameraButton">
+                        Start Camera
+                    </button>
+
+                    <button id="captureButton" disabled>
+                        Capture Photo
+                    </button>
+
+                </div>
+
+                <p id="cameraStatus">
+                    Click Start Camera to activate your camera.
+                </p>
+
+            </div>
+
+            <!-- UPLOAD IMAGE -->
+
+            <div class="scanner-card">
+
+                <h2>🖼️ Upload Image</h2>
+
+                <label for="imageUpload" class="upload-box">
+
+                    <span>📁</span>
+
+                    <p>Click here to select an image</p>
+
+                    <small>JPG, PNG or WEBP</small>
+
+                </label>
+
+                <input
+                    type="file"
+                    id="imageUpload"
+                    accept="image/jpeg,image/png,image/webp"
+                    hidden
+                >
+
+                <img id="imagePreview" alt="Selected coconut tree image">
+
+                <p id="uploadStatus">
+                    No image selected.
+                </p>
+
+            </div>
+
+        </section>
+
+        <section class="scan-action">
+
+            <button id="scanButton" disabled>
+                🔍 SCAN COCONUT TREE
+            </button>
+
+            <p id="scanStatus">
+                Capture a photo or upload an image to continue.
+            </p>
+
+        </section>
+
+    </main>
+
+    <script src="scanning.js"></script>
+
+</body>
+
+</html>
+

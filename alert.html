@@ -1,0 +1,631 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CocoGuard | Farmer Alerts</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f7f1;
+            color: #193b29;
+        }
+
+        header {
+            background: linear-gradient(135deg, #123d29, #267449);
+            color: white;
+            padding: 22px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: #9cf2ad;
+        }
+
+        header p {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #e0f5e6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 30px 5%;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        .intro h1 {
+            font-size: clamp(25px, 4vw, 34px);
+            margin-bottom: 9px;
+        }
+
+        .intro p {
+            color: #687c70;
+            line-height: 1.6;
+        }
+
+        .alert-banner {
+            padding: 20px;
+            border: 1px solid #ffc6b9;
+            background: #fff0ec;
+            border-radius: 16px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 22px;
+        }
+
+        .alert-icon {
+            font-size: 30px;
+        }
+
+        .alert-banner h2 {
+            color: #a83224;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .alert-banner p {
+            color: #74463e;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0eae1;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 8px 25px #183e2909;
+            min-width: 0;
+        }
+
+        .card h2 {
+            font-size: 19px;
+            margin-bottom: 16px;
+        }
+
+        .detail {
+            padding: 13px 0;
+            border-bottom: 1px solid #edf1ed;
+        }
+
+        .detail:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            display: block;
+            color: #78877d;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+            line-height: 1.6;
+        }
+
+        .status {
+            display: inline-block;
+            background: #fff0e9;
+            color: #b64725;
+            border-radius: 30px;
+            padding: 7px 11px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .recommendation {
+            background: #eff9f0;
+            border: 1px solid #d8eddc;
+            padding: 15px;
+            border-radius: 12px;
+            color: #3f6249;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .message-preview {
+            background: #f5f8f4;
+            border: 1px solid #dfe8de;
+            border-radius: 13px;
+            padding: 17px;
+            line-height: 1.8;
+            font-size: 14px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .form-group {
+            margin-top: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 46px;
+            border: 1px solid #cad9cb;
+            border-radius: 10px;
+            padding: 12px;
+            background: white;
+            font: inherit;
+            font-size: 15px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 17px;
+        }
+
+        button,
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+            padding: 12px 17px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .primary {
+            background: #207b43;
+            color: white;
+        }
+
+        .secondary {
+            background: white;
+            border: 1px solid #cad9cb;
+            color: #245638;
+        }
+
+        .notice {
+            margin-top: 15px;
+            color: #748278;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .history-item {
+            border-left: 4px solid #e65b48;
+            background: #fafbf9;
+            padding: 13px;
+            margin-top: 12px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .history-item strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .history-item p {
+            color: #718075;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            color: #829086;
+            font-size: 12px;
+            padding: 25px;
+        }
+
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .alert-banner {
+                padding: 16px;
+            }
+
+            .button-row button,
+            .button-row .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <div class="logo">🌴 Coco<span>Guard</span></div>
+        <p>Smart Coconut Farm · Farmer Alert Centre</p>
+    </div>
+
+    <a href="result.html" class="button secondary">← Back to Results</a>
+</header>
+
+<main class="container">
+
+    <section class="intro">
+        <h1>🚨 Farmer Alert Dashboard</h1>
+        <p>Review the latest coconut disease result and prepare a farmer notification.</p>
+    </section>
+
+    <section class="alert-banner">
+        <div class="alert-icon">⚠️</div>
+        <div>
+            <h2 id="alertTitle">Disease Alert</h2>
+            <p id="alertDescription">
+                Loading the latest scan result...
+            </p>
+        </div>
+    </section>
+
+    <div class="grid">
+
+        <section class="card">
+            <h2>🌴 Disease & Farm Status</h2>
+
+            <div class="detail">
+                <span class="detail-label">Detected Disease</span>
+                <div class="detail-value" id="diseaseName">Not available</div>
+            </div>
+
+            <div class="detail">
+                <span class="detail-label">AI Confidence</span>
+                <div class="detail-value" id="confidence">Not available</div>
+            </div>
+
+            <div class="detail">
+                <span class="detail-label">Farm Status</span>
+                <span class="status" id="farmStatus">Awaiting scan</span>
+            </div>
+
+            <div class="detail">
+                <span class="detail-label">Affected Tree Location</span>
+                <div class="detail-value">
+                    Not GPS-verified
+                </div>
+            </div>
+
+            <p class="notice">
+                Tree-level location is not available unless the farm monitoring system
+                supplies verified tree or GPS data.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>🩺 Treatment Recommendation</h2>
+            <div class="recommendation" id="treatment">
+                No treatment recommendation available yet.
+            </div>
+            <p class="notice">
+                AI predictions should be verified by an agricultural specialist
+                before applying chemicals or other treatments.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>📩 Farmer Message Preview</h2>
+
+            <div class="message-preview" id="messagePreview" aria-live="polite">
+                Preparing farmer alert...
+            </div>
+
+            <div class="button-row">
+                <button type="button" class="primary" id="copyButton">
+                    Copy Alert Message
+                </button>
+
+                <button type="button" class="secondary" id="shareButton">
+                    Share Message
+                </button>
+            </div>
+
+            <p class="notice">
+                These buttons prepare or share the message. They do not automatically
+                send an SMS to a farmer.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>📱 Farmer Contact</h2>
+
+            <div class="form-group">
+                <label for="farmerName">Farmer Name (optional)</label>
+                <input id="farmerName" type="text" placeholder="Enter farmer name">
+            </div>
+
+            <div class="form-group">
+                <label for="farmerPhone">Farmer Phone Number</label>
+                <input
+                    id="farmerPhone"
+                    type="tel"
+                    inputmode="tel"
+                    autocomplete="tel"
+                    placeholder="Enter phone number"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="language">Alert Language</label>
+                <select id="language">
+                    <option value="en">English</option>
+                    <option value="ta">Tamil</option>
+                </select>
+            </div>
+
+            <div class="button-row">
+                <button type="button" class="primary" id="smsButton">
+                    Open SMS App
+                </button>
+            </div>
+
+            <p class="notice" id="contactNotice" aria-live="polite">
+                Opens your device's SMS app with a prepared message where supported.
+                You must review and send it yourself. Real automated SMS requires a
+                configured SMS provider and backend.
+            </p>
+        </section>
+
+    </div>
+
+    <section class="card" style="margin-top: 20px;">
+        <h2>🕒 Current Alert</h2>
+
+        <div class="history-item">
+            <strong id="historyTitle">Latest scan result</strong>
+            <p id="historyTime">Time not available</p>
+            <p id="historyMessage">Waiting for scan data.</p>
+        </div>
+    </section>
+
+    <div class="button-row" style="margin-top: 24px;">
+        <a href="index.html" class="button primary">← Back to Home</a>
+        <a href="result.html" class="button secondary">View Full Results</a>
+    </div>
+
+</main>
+
+<footer>
+    CocoGuard · AI-Powered Coconut Disease Detection
+</footer>
+
+<script>
+    const disease = sessionStorage.getItem("coconutDisease") || "";
+    const confidenceRaw = sessionStorage.getItem("coconutConfidence");
+    const imageData = sessionStorage.getItem("coconutImage");
+
+    const treatmentMap = {
+        "bud root dropping":
+            "Remove severely affected plant material where appropriate. Maintain good drainage, avoid waterlogging, and ask a local agricultural specialist to confirm the diagnosis and suitable treatment.",
+
+        "bud rot":
+            "Inspect the crown and improve drainage. Seek agricultural advice for confirmation and suitable treatment before applying any product.",
+
+        "gray leaf spot":
+            "Remove heavily infected fallen leaves where appropriate and improve airflow. Consult a local agricultural specialist about disease confirmation and treatment.",
+
+        "leaf rot":
+            "Maintain good drainage and farm sanitation. Have the disease confirmed by an agricultural specialist before selecting a treatment.",
+
+        "stem bleeding":
+            "Avoid injuring the trunk and inspect the affected area. Seek professional agricultural advice promptly to confirm the cause and suitable treatment."
+    };
+
+    const diseaseKey = disease.trim().toLowerCase();
+    const isHealthy = [
+        "healthy",
+        "healthy leaf",
+        "no disease"
+    ].includes(diseaseKey);
+
+    const confidenceNumber = Number.parseFloat(confidenceRaw);
+    const confidenceText = Number.isFinite(confidenceNumber)
+        ? Math.min(100, Math.max(0, confidenceNumber)).toFixed(2) + "%"
+        : "Not available";
+
+    const treatment = treatmentMap[diseaseKey] ||
+        (isHealthy
+            ? "No disease was reported by the model. Continue regular farm monitoring and follow local agricultural guidance."
+            : "No specific recommendation is available for this prediction. Consult an agricultural specialist to confirm the diagnosis.");
+
+    const hasResult = Boolean(disease);
+
+    document.getElementById("diseaseName").textContent =
+        disease || "No scan result found";
+
+    document.getElementById("confidence").textContent = confidenceText;
+
+    document.getElementById("treatment").textContent =
+        hasResult ? treatment : "Please complete a scan first.";
+
+    document.getElementById("farmStatus").textContent =
+        !hasResult ? "Awaiting scan" :
+        isHealthy ? "No disease reported" :
+        "Review recommended";
+
+    document.getElementById("alertTitle").textContent =
+        !hasResult ? "No Scan Result" :
+        isHealthy ? "🌿 Health Status Update" :
+        "🚨 Coconut Disease Alert";
+
+    document.getElementById("alertDescription").textContent =
+        !hasResult
+            ? "No saved scan result was found. Return to the scanner and analyse a coconut leaf."
+            : isHealthy
+                ? "The model reports a healthy result. Continue routine farm monitoring."
+                : "The model predicted " + disease +
+                  ". Review the result and confirm the diagnosis with an agricultural specialist.";
+
+    const now = new Date();
+    const timeText = now.toLocaleString();
+
+    document.getElementById("historyTitle").textContent =
+        hasResult ? disease : "No scan result";
+
+    document.getElementById("historyTime").textContent =
+        "Alert page opened: " + timeText;
+
+    document.getElementById("historyMessage").textContent =
+        hasResult
+            ? "Model confidence: " + confidenceText
+            : "No scan data is currently available.";
+
+    function buildMessage(language) {
+        const farmerName =
+            document.getElementById("farmerName").value.trim();
+
+        const greeting = farmerName
+            ? (language === "ta"
+                ? "வணக்கம் " + farmerName + ","
+                : "Hello " + farmerName + ",")
+            : (language === "ta" ? "வணக்கம் விவசாயி," : "Hello Farmer,");
+
+        if (!hasResult) {
+            return language === "ta"
+                ? greeting + "\nCocoGuard: ஸ்கேன் முடிவு கிடைக்கவில்லை. முதலில் தென்னை இலையை ஸ்கேன் செய்யவும்."
+                : greeting + "\nCocoGuard: No saved scan result was found. Please scan a coconut leaf first.";
+        }
+
+        if (language === "ta") {
+            return greeting +
+                "\nCocoGuard தென்னை பண்ணை எச்சரிக்கை" +
+                "\nகண்டறியப்பட்ட நிலை: " + disease +
+                "\nAI நம்பகத்தன்மை: " + confidenceText +
+                "\nபரிந்துரை: " + treatment +
+                "\nகுறிப்பு: சிகிச்சைக்கு முன் வேளாண் நிபுணரிடம் நோயை உறுதிப்படுத்தவும்.";
+        }
+
+        return greeting +
+            "\nCocoGuard Coconut Farm Alert" +
+            "\nPredicted disease: " + disease +
+            "\nAI confidence: " + confidenceText +
+            "\nRecommendation: " + treatment +
+            "\nPlease confirm the diagnosis with an agricultural specialist before treatment.";
+    }
+
+    function updateMessage() {
+        const language = document.getElementById("language").value;
+
+        document.getElementById("messagePreview").textContent =
+            buildMessage(language);
+    }
+
+    document.getElementById("language").addEventListener("change", updateMessage);
+    document.getElementById("farmerName").addEventListener("input", updateMessage);
+
+    document.getElementById("copyButton").addEventListener("click", async function () {
+        const message = buildMessage(
+            document.getElementById("language").value
+        );
+
+        try {
+            await navigator.clipboard.writeText(message);
+            alert("Alert message copied!");
+        } catch (error) {
+            const temporary = document.createElement("textarea");
+            temporary.value = message;
+            temporary.style.position = "absolute";
+            temporary.style.left = "-9999px";
+            document.body.appendChild(temporary);
+            temporary.select();
+
+            const copied = document.execCommand("copy");
+            temporary.remove();
+
+            alert(copied
+                ? "Alert message copied!"
+                : "Copy failed. Please select and copy the message manually.");
+        }
+    });
+
+    document.getElementById("shareButton").addEventListener("click", async function () {
+        const message = buildMessage(
+            document.getElementById("language").value
+        );
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: "CocoGuard Farmer Alert",
+                    text: message
+                });
+            } catch (error) {
+                // The user may cancel the share dialog.
+            }
+        } else {
+            alert("Sharing is not supported in this browser. Use Copy Alert Message instead.");
+        }
+    });
+
+    document.getElementById("smsButton").addEventListener("click", function () {
+        const phone = document.getElementById("farmerPhone").value.trim();
+
+        if (!phone) {
+            alert("Please enter the farmer's phone number first.");
+            document.getElementById("farmerPhone").focus();
+            return;
+        }
+
+        const safePhone = phone.replace(/[^\d+]/g, "");
+
+        if (!/^\+?\d{7,15}$/.test(safePhone)) {
+            alert("Please enter a valid phone number, including the country code if needed.");
+            return;
+        }
+
+        const message = buildMessage(
+            document.getElementById("language").value
+        );
+
+        window.location.href =
+            "sms:" + safePhone + "?body=" + encodeURIComponent(message);
+    });
+
+    updateMessage();
+</script>
+
+</body>
+</html>
+

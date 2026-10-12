@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CocoGuard | Smart Farm Results</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f0;
+            color: #173c29;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #123d29, #267449);
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 18px #183e2920;
+        }
+
+        .brand {
+            font-size: 27px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .brand span {
+            color: #9cf2ad;
+        }
+
+        .header-label {
+            font-size: 13px;
+            color: #e0f5e6;
+            margin-top: 5px;
+        }
+
+        .page {
+            max-width: 1450px;
+            margin: auto;
+            padding: 30px 5%;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            font-size: clamp(25px, 4vw, 36px);
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: #687c70;
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.4fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0eae1;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px #193d2610;
+        }
+
+        .card-heading {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e8eee8;
+        }
+
+        .card-heading h2 {
+            font-size: 19px;
+            margin-bottom: 6px;
+        }
+
+        .card-heading p {
+            font-size: 13px;
+            color: #748278;
+            line-height: 1.5;
+        }
+
+        .result-content {
+            padding: 22px;
+        }
+
+        .result-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            background: #edf3ed;
+            border-radius: 14px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .disease-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #758478;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .disease-name {
+            font-size: 25px;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+            margin-bottom: 14px;
+        }
+
+        .disease-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 13px;
+            border-radius: 30px;
+            background: #fff0e9;
+            color: #b64725;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .disease-badge.healthy {
+            background: #e2f8e9;
+            color: #18723c;
+        }
+
+        .confidence-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .confidence-number {
+            color: #247d48;
+            font-size: 18px;
+        }
+
+        .confidence-track {
+            height: 10px;
+            background: #e8eee8;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #60ca7a, #188344);
+            border-radius: 20px;
+            transition: width 1s ease;
+        }
+
+        .treatment-box {
+            background: #f3faf4;
+            border: 1px solid #dcefe0;
+            border-radius: 15px;
+            padding: 18px;
+            margin-top: 24px;
+        }
+
+        .treatment-box h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .treatment-box p {
+            color: #506558;
+            font-size: 14px;
+            line-height: 1.75;
+            white-space: pre-line;
+        }
+
+        .map-card {
+            min-width: 0;
+        }
+
+        .map-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .live-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #e6f8eb;
+            color: #19713a;
+            padding: 8px 11px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background: #28bd58;
+            border-radius: 50%;
+            animation: livePulse 1.5s infinite;
+        }
+
+        @keyframes livePulse {
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        .map-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            padding: 18px 20px;
+        }
+
+        .stat {
+            background: #f5f8f4;
+            border: 1px solid #e6ede5;
+            border-radius: 12px;
+            padding: 13px 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 23px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .stat-caption {
+            color: #6d7e71;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .stat.total .stat-number {
+            color: #286a40;
+        }
+
+        .stat.good .stat-number {
+            color: #1a9c50;
+        }
+
+        .stat.bad .stat-number {
+            color: #df4141;
+        }
+
+        /* 3D-style farm map */
+        .farm-map {
+            position: relative;
+            width: calc(100% - 32px);
+            margin: 0 16px 16px;
+            min-height: 500px;
+            height: clamp(430px, 55vw, 650px);
+            overflow: hidden;
+            isolation: isolate;
+            border-radius: 18px;
+            background:
+                radial-gradient(ellipse at 50% 50%, #71984c 0%, #3f713c 58%, #214c30 100%);
+            border: 1px solid #b8d0b3;
+        }
+
+        /*
+          CSS-generated 3D farm background.
+          This displays even when no farm photo is available.
+        */
+
+        .farm-terrain {
+            position: absolute;
+            inset: -10%;
+            z-index: 0;
+            overflow: hidden;
+            transform: perspective(850px) rotateX(13deg) scale(1.12);
+            transform-origin: center;
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 47px,
+                    #d0bd8060 49px,
+                    #284e2d65 58px,
+                    transparent 69px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    #426f39 0px,
+                    #426f39 45px,
+                    #638a45 47px,
+                    #2f6135 62px
+                );
+        }
+
+        .farm-terrain::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, #96b65a55, transparent 30%),
+                radial-gradient(ellipse at 75% 70%, #a4b96840, transparent 35%),
+                repeating-linear-gradient(
+                    35deg,
+                    transparent 0px,
+                    transparent 65px,
+                    #c8b77a50 68px,
+                    #c8b77a50 73px,
+                    transparent 77px
+                );
+        }
+
+        .farm-terrain::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, #ffffff12, transparent 45%, #102d1b42);
+        }
+
+        .farm-map-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            display: none;
+        }
+
+        .map-photo-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: linear-gradient(
+                180deg,
+                #102b1b30,
+                transparent 35%,
+                #102b1b25
+            );
+            pointer-events: none;
+        }
+
+        .map-label {
+            position: absolute;
+            z-index: 6;
+            top: 14px;
+            left: 14px;
+            background: #102d20dc;
+            color: white;
+            border: 1px solid #ffffff35;
+            border-radius: 10px;
+            padding: 10px 13px;
+            font-size: 12px;
+            line-height: 1.6;
+            backdrop-filter: blur(5px);
+        }
+
+        .map-label strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .map-compass {
+            position: absolute;
+            z-index: 6;
+            top: 15px;
+            right: 15px;
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 50%;
+            background: #102d20dd;
+            border: 1px solid #ffffff40;
+            color: white;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .map-compass small {
+            font-size: 8px;
+        }
+
+        .coconut-tree-marker {
+            position: absolute;
+            z-index: 5;
+            transform: translate(-50%, -50%);
+            width: 54px;
+            height: 63px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: default;
+        }
+
+        .tree-shadow {
+            position: absolute;
+            bottom: 2px;
+            width: 42px;
+            height: 13px;
+            border-radius: 50%;
+            background: #102714a0;
+            filter: blur(4px);
+        }
+
+        .tree-icon {
+            position: relative;
+            z-index: 2;
+            font-size: 35px;
+            line-height: 1;
+            filter: drop-shadow(2px 5px 2px #132a1970);
+            transform: translateY(-3px);
+        }
+
+        .healthy-tree .tree-icon {
+            filter: drop-shadow(2px 5px 2px #132a1970);
+        }
+
+        .tree-pin {
+            position: absolute;
+            top: -3px;
+            right: -2px;
+            width: 15px;
+            height: 15px;
+            background: #20d66a;
+            border: 2px solid white;
+            border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 1px 5px #142d19a0;
+        }
+
+        .affected-tree .tree-pin {
+            background: #ff3030;
+            animation: affectedBlink 0.9s infinite;
+        }
+
+        .affected-tree .tree-icon {
+            animation: treeAlert 0.9s infinite;
+        }
+
+        @keyframes affectedBlink {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 5px #ff3030, 0 0 14px #ff3030;
+            }
+
+            50% {
+                opacity: 0.25;
+                box-shadow: 0 0 2px #ff3030;
+            }
+        }
+
+        @keyframes treeAlert {
+            0%, 100% {
+                filter: drop-shadow(0 0 5px #ff3434)
+                        drop-shadow(2px 5px 2px #132a1970);
+            }
+
+            50% {
+                filter: drop-shadow(0 0 1px #ff3434)
+                        drop-shadow(2px 5px 2px #132a1970);
+            }
+        }
+
+        .tree-name {
+            position: absolute;
+            top: 53px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #153824e8;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 7px;
+            border-radius: 5px;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px #102b1b45;
+        }
+
+        .affected-tree .tree-name {
+            background: #b82929f2;
+        }
+
+        .map-scale {
+            position: absolute;
+            z-index: 6;
+            left: 14px;
+            bottom: 15px;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            text-shadow: 0 1px 3px #102b1b;
+        }
+
+        .scale-line {
+            width: 65px;
+            height: 5px;
+            border-left: 2px solid white;
+            border-right: 2px solid white;
+            border-top: 2px solid white;
+            margin-bottom: 5px;
+        }
+
+        .map-legend {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 0 20px 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            color: #53685a;
+        }
+
+        .legend-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .legend-healthy {
+            background: #20c767;
+        }
+
+        .legend-affected {
+            background: #ff3030;
+            animation: affectedBlink 0.9s infinite;
+        }
+
+        .map-note {
+            margin: 0 20px 20px;
+            padding: 12px 14px;
+            background: #f5f8f3;
+            color: #6d7c70;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 46px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-primary {
+            color: white;
+            background: #207b43;
+        }
+
+        .button-secondary {
+            color: #245638;
+            background: white;
+            border: 1px solid #cbdccd;
+        }
+
+        footer {
+            padding: 25px 5%;
+            text-align: center;
+            color: #829086;
+            font-size: 12px;
+        }
+
+        @media (max-width: 850px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .farm-map {
+                min-height: 470px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 17px 5%;
+            }
+
+            .brand {
+                font-size: 23px;
+            }
+
+            .page {
+                padding: 23px 4%;
+            }
+
+            .result-content {
+                padding: 17px;
+            }
+
+            .map-stats {
+                padding: 13px;
+                gap: 7px;
+            }
+
+            .stat-number {
+                font-size: 20px;
+            }
+
+            .farm-map {
+                width: calc(100% - 20px);
+                margin: 0 10px 14px;
+                min-height: 430px;
+                height: 470px;
+            }
+
+            .coconut-tree-marker {
+                transform: translate(-50%, -50%) scale(0.86);
+            }
+
+            .map-legend {
+                padding: 0 15px 17px;
+                gap: 12px;
+            }
+
+            .actions .button {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <div class="brand">🌴 Coco<span>Guard</span></div>
+        <div class="header-label">AI-Powered Coconut Farm Health Monitoring</div>
+    </div>
+
+    <div class="live-label">
+        <span class="live-dot"></span>
+        FARM MONITOR
+    </div>
+</header>
+
+<main class="page">
+
+    <div class="page-heading">
+        <h1>🌿 Scan Results</h1>
+        <p>Review your coconut leaf diagnosis and farm health overview.</p>
+    </div>
+
+    <div class="dashboard">
+
+        <!-- AI RESULTS: existing IDs preserved -->
+        <section class="card">
+            <div class="card-heading">
+                <h2>AI Disease Detection</h2>
+                <p>Image analysis and recommended next steps.</p>
+            </div>
+
+            <div class="result-content">
+
+                <img
+    id="resultImage"
+    class="result-image"
+    alt="Uploaded coconut leaf"
+    style="display: block; width: 100%; max-height: 300px; object-fit: contain;"
+>
+
+                <div class="disease-label">Predicted Disease</div>
+
+                <h2 id="diseaseName" class="disease-name">
+                    Analyzing...
+                </h2>
+
+                <div id="diseaseBadge" class="disease-badge">
+                    AI Prediction
+                </div>
+
+                <div class="confidence-top">
+                    <span>Model Confidence</span>
+                    <span id="confidence" class="confidence-number">0%</span>
+                </div>
+
+                <div
+                    class="confidence-track"
+                    role="progressbar"
+                    aria-label="AI confidence"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="0"
+                    id="confidenceTrack"
+                >
+                    <div id="confidenceFill" class="confidence-fill"></div>
+                </div>
+
+                <div class="treatment-box">
+                    <h3>🩺 Recommended Treatment</h3>
+                    <p id="treatment">Loading treatment recommendation...</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3D-STYLE FARM MAP -->
+        <section class="card map-card">
+
+            <div class="card-heading">
+                <div class="map-header">
+                    <div>
+                        <h2>🌴 Smart Farm Map</h2>
+                        <p>3D-style coconut plantation health overview.</p>
+                    </div>
+
+                    <span class="live-label">
+                        <span class="live-dot"></span>
+                        MAP VIEW
+                    </span>
+                </div>
+            </div>
+
+            <div class="map-stats">
+                <div class="stat total">
+                    <div id="totalTrees" class="stat-number">9</div>
+                    <div class="stat-caption">Mapped Trees</div>
+                </div>
+
+                <div class="stat good">
+                    <div id="healthyTrees" class="stat-number">8</div>
+                    <div class="stat-caption">Healthy</div>
+                </div>
+
+                <div class="stat bad">
+                    <div id="affectedTrees" class="stat-number">1</div>
+                    <div class="stat-caption">Affected</div>
+                </div>
+            </div>
+
+            <div class="farm-map" id="farmMap">
+
+                <!-- CSS 3D terrain background -->
+                <div class="farm-terrain" id="farmTerrain"></div>
+
+                <!-- Optional farm photo: shown only if it loads -->
+                <img
+                    class="farm-map-image"
+                    id="farmPhoto"
+                    src="./background/coconut-tree.jpg"
+                    alt="Coconut farm aerial photo"
+                >
+
+                <div class="map-photo-overlay"></div>
+
+                <div class="map-label">
+                    <strong>COCONUT PLANTATION</strong>
+                    <span>3D-style monitoring view</span>
+                </div>
+
+                <div class="map-compass">
+                    ↑
+                    <small>N</small>
+                </div>
+
+                <!-- Healthy trees -->
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 17%; top: 23%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 01</span>
+                </div>
+
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 42%; top: 20%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 02</span>
+                </div>
+
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 68%; top: 25%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 03</span>
+                </div>
+
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 83%; top: 43%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 04</span>
+                </div>
+
+                <!-- Affected tree: blinking red -->
+                <div class="coconut-tree-marker affected-tree"
+                     style="left: 54%; top: 51%;"
+                     aria-label="Example affected tree">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Affected</span>
+                </div>
+
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 23%; top: 57%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 06</span>
+                </div>
+
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 76%; top: 70%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 07</span>
+                </div>
+
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 42%; top: 78%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 08</span>
+                </div>
+
+                <div class="coconut-tree-marker healthy-tree"
+                     style="left: 12%; top: 82%;">
+                    <span class="tree-shadow"></span>
+                    <span class="tree-icon">🌴</span>
+                    <span class="tree-pin"></span>
+                    <span class="tree-name">Tree 09</span>
+                </div>
+
+                <div class="map-scale">
+                    <div class="scale-line"></div>
+                    SCHEMATIC MAP
+                </div>
+
+            </div>
+
+            <div class="map-legend">
+                <div class="legend-item">
+                    <span class="legend-dot legend-healthy"></span>
+                    Healthy tree
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-dot legend-affected"></span>
+                    Affected tree
+                </div>
+            </div>
+
+            <div class="map-note">
+                <strong>Note:</strong> Tree locations and counts shown here are illustrative.
+                The 3D-style background is generated with CSS. A real aerial farm photo
+                will be displayed if <code>background/coconut-tree.jpg</code> exists.
+                Actual tree-level disease mapping requires GPS or farm survey data.
+            </div>
+
+        </section>
+
+    </div>
+
+    <div class="actions">
+        <a href="index.html" class="button button-primary">← Back to Home</a>
+        <button type="button" id="printButton" class="button button-secondary">
+            Print Results
+        </button>
+        <a href="alert.html" class="button button-primary">
+    🚨 Farmer Alert
+</a>
+    </div>
+
+</main>
+
+<footer>
+    CocoGuard · AI-powered Coconut Disease Detection
+</footer>
+
+<script>
+    // Preserve existing sessionStorage keys used by the scanning page.
+    const imageData = sessionStorage.getItem("coconutImage");
+    const disease = sessionStorage.getItem("coconutDisease");
+    const confidenceData = sessionStorage.getItem("coconutConfidence");
+
+    const resultImage = document.getElementById("resultImage");
+    const diseaseName = document.getElementById("diseaseName");
+    const diseaseBadge = document.getElementById("diseaseBadge");
+    const confidenceLabel = document.getElementById("confidence");
+    const confidenceFill = document.getElementById("confidenceFill");
+    const confidenceTrack = document.getElementById("confidenceTrack");
+    const treatmentElement = document.getElementById("treatment");
+
+    if (imageData) {
+        resultImage.src = imageData;
+        resultImage.style.display = "block";
+    } else {
+        resultImage.style.display = "none";
+    }
+
+    const diseaseTreatments = {
+        "Bud Root Dropping":
+            "Remove severely affected plant material and keep the palm base clean. Check drainage and avoid waterlogging. Consult a local agricultural officer for diagnosis and treatment recommendations.",
+
+        "Bud Rot":
+            "Inspect the crown and remove severely affected tissue only with appropriate guidance. Improve drainage and avoid water stagnation. Contact your local agricultural extension officer for a confirmed diagnosis and recommended treatment.",
+
+        "Gray Leaf Spot":
+            "Remove heavily infected fallen leaves and improve airflow around the palms. Avoid unnecessary leaf wetting. Seek local agricultural advice for disease confirmation and suitable fungicide recommendations.",
+
+        "Leaf Rot":
+            "Remove badly affected leaf material where appropriate and maintain good drainage and sanitation. Check the growing conditions and consult an agricultural specialist for treatment recommendations.",
+
+        "Stem Bleeding":
+            "Inspect the trunk for bleeding lesions and avoid damaging the stem. Keep the palm surroundings clean and check drainage. Seek professional agricultural advice promptly to confirm the cause and treatment."
+    };
+
+    function normalizeDiseaseName(name) {
+        return (name || "")
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, " ");
+    }
+
+    if (disease) {
+        diseaseName.textContent = disease;
+    } else {
+        diseaseName.textContent = "No prediction found";
+    }
+
+    const normalizedDisease = normalizeDiseaseName(disease);
+    const isKnownDisease = Object.keys(diseaseTreatments).some(
+        name => normalizeDiseaseName(name) === normalizedDisease
+    );
+
+    if (isKnownDisease) {
+        const matchedKey = Object.keys(diseaseTreatments).find(
+            name => normalizeDiseaseName(name) === normalizedDisease
+        );
+
+        treatmentElement.textContent = diseaseTreatments[matchedKey];
+        diseaseBadge.textContent = "⚠ Disease Detected";
+    } else if (disease) {
+        treatmentElement.textContent =
+            "No specific recommendation is available for this prediction. Please consult a local agricultural specialist to confirm the diagnosis.";
+        diseaseBadge.textContent = "AI Prediction";
+    } else {
+        treatmentElement.textContent =
+            "Please scan a coconut leaf first to view its treatment recommendation.";
+        diseaseBadge.textContent = "Awaiting Scan";
+    }
+
+    const confidenceValue = Number.parseFloat(confidenceData);
+    const safeConfidence = Number.isFinite(confidenceValue)
+        ? Math.min(100, Math.max(0, confidenceValue))
+        : 0;
+
+    confidenceLabel.textContent = safeConfidence.toFixed(2) + "%";
+    confidenceTrack.setAttribute("aria-valuenow", String(safeConfidence));
+
+    requestAnimationFrame(() => {
+        confidenceFill.style.width = safeConfidence + "%";
+    });
+
+    if (normalizedDisease === "healthy" ||
+        normalizedDisease === "healthy leaf" ||
+        normalizedDisease === "no disease") {
+        diseaseBadge.classList.add("healthy");
+        diseaseBadge.textContent = "✓ Healthy";
+    }
+
+    // Farm photo fallback: use the CSS-generated terrain if the image is missing.
+    const farmPhoto = document.getElementById("farmPhoto");
+    const farmTerrain = document.getElementById("farmTerrain");
+
+    farmPhoto.addEventListener("load", function () {
+        farmPhoto.style.display = "block";
+        farmTerrain.style.display = "none";
+    });
+
+    farmPhoto.addEventListener("error", function () {
+        farmPhoto.style.display = "none";
+        farmTerrain.style.display = "block";
+    });
+
+    // Print button
+    document.getElementById("printButton").addEventListener("click", function () {
+        window.print();
+    });
+</script>
+
+</body>
+</html>
+
